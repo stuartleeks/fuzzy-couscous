@@ -1,0 +1,91 @@
+name: main
+concurrency: main
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      name: checkout code
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2 
+      if: github.ref == 'refs/heads/main'
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build dev container
+      uses: devcontainers/ci@v0.3
+      with:
+        imageName: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
+        cacheFrom: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
+        refFilterForPush: refs/heads/main
+        env: |
+          
+        runCmd: |
+          set -e
+
+          echo -e "=\n=\n"
+          echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)"
+          echo -e "=\n=\n"
+
+
+    - name: Build dev container (2)
+      uses: devcontainers/ci@v0.3
+      with:
+        imageName: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
+        cacheFrom: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
+        refFilterForPush: refs/heads/main
+        env: |
+          
+        runCmd: |
+          set -e
+
+          echo -e "=\n=\n"
+          echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)"
+          echo -e "=\n=\n"
+
+
+  build-container-repeat:
+    runs-on: ubuntu-latest
+    needs: build-container
+
+    steps:
+    - uses: actions/checkout@v4
+      name: checkout code
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2 
+      if: github.ref == 'refs/heads/main'
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build dev container
+      uses: devcontainers/ci@v0.3
+      with:
+        imageName: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
+        cacheFrom: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
+        refFilterForPush: refs/heads/main
+        env: |
+          
+        runCmd: |
+          set -e
+
+          echo -e "=\n=\n"
+          echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)"
+          echo -e "=\n=\n"
+
