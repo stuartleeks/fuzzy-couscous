@@ -33,7 +33,7 @@ jobs:
         cacheFrom: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
         refFilterForPush: refs/heads/main
         env: |
-          
+          GITHUB_STEP_SUMMARY
         runCmd: |
           set -e
 
@@ -41,6 +41,7 @@ jobs:
           echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)"
           echo -e "=\n=\n"
 
+          echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_STEP_SUMMARY
 
     - name: Build dev container (2)
       uses: devcontainers/ci@v0.3
@@ -49,7 +50,7 @@ jobs:
         cacheFrom: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
         refFilterForPush: refs/heads/main
         env: |
-          
+          GITHUB_STEP_SUMMARY
         runCmd: |
           set -e
 
@@ -57,6 +58,7 @@ jobs:
           echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)"
           echo -e "=\n=\n"
 
+          echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_STEP_SUMMARY
 
   build-container-repeat:
     runs-on: ubuntu-latest
@@ -81,7 +83,7 @@ jobs:
         cacheFrom: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
         refFilterForPush: refs/heads/main
         env: |
-          
+          GITHUB_STEP_SUMMARY
         runCmd: |
           set -e
 
@@ -89,3 +91,4 @@ jobs:
           echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)"
           echo -e "=\n=\n"
 
+          echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_STEP_SUMMARY
