@@ -78,6 +78,10 @@ jobs:
           echo "Timestamp2: $(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_STEP_SUMMARY
           echo "timestamp2=$(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_OUTPUT
 
+          echo "===== GH OUTPUT START ====="
+          cat "$GITHUB_OUTPUT"
+          echo "===== GH OUTPUT END ====="
+
   build-container-repeat:
     runs-on: ubuntu-latest
     needs: build-container
