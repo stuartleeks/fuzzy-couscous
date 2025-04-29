@@ -18,6 +18,9 @@ permissions:
 jobs:
   build-container:
     runs-on: ubuntu-latest
+    outputs:
+      timestamp1: ${{ steps.build1.outputs.timestamp1 }}
+      timestamp2: ${{ steps.build2.outputs.timestamp2 }}
 
     steps:
     - uses: actions/checkout@v4
@@ -39,6 +42,7 @@ jobs:
 
     - name: Build dev container
       uses: devcontainers/ci@v0.3
+      id: build1
       with:
         imageName: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
         cacheFrom: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
@@ -49,12 +53,14 @@ jobs:
           set -e
 
           echo -e "=\n=\n"
-          echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)"
+          echo "= Timestamp1: $(cat /usr/local/etc/dc-timestamp.txt)"
           echo -e "=\n=\n"
 
-          echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_STEP_SUMMARY
+          echo "Timestamp1: $(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_STEP_SUMMARY
+          echo "timestamp1=$(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_OUTPUT
 
     - name: Build dev container (2)
+      id: build2
       uses: devcontainers/ci@v0.3
       with:
         imageName: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
@@ -66,10 +72,11 @@ jobs:
           set -e
 
           echo -e "=\n=\n"
-          echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)"
+          echo "= Timestamp2: $(cat /usr/local/etc/dc-timestamp.txt)"
           echo -e "=\n=\n"
 
-          echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_STEP_SUMMARY
+          echo "Timestamp2: $(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_STEP_SUMMARY
+          echo "timestamp2=$(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_OUTPUT
 
   build-container-repeat:
     runs-on: ubuntu-latest
@@ -94,6 +101,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build dev container
+      id: build3
       uses: devcontainers/ci@v0.3
       with:
         imageName: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
@@ -105,7 +113,38 @@ jobs:
           set -e
 
           echo -e "=\n=\n"
-          echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)"
+          echo "= Timestamp3: $(cat /usr/local/etc/dc-timestamp.txt)"
           echo -e "=\n=\n"
 
-          echo "= Timestamp: $(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_STEP_SUMMARY
+          echo "Timestamp3: $(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_STEP_SUMMARY
+
+          echo "timestamp3=$(cat /usr/local/etc/dc-timestamp.txt)" >> $GITHUB_OUTPUT
+
+
+    - name: check values
+      id: check
+      env:
+        TIMESTAMP1: ${{ needs.build-container.outputs.timestamp1 }}
+        TIMESTAMP2: ${{ needs.build-container.outputs.timestamp2 }}
+        TIMESTAMP3: ${{ steps.build3.outputs.timestamp3 }}
+      run: |
+        echo "TIMESTAMP1: $TIMESTAMP1"
+        echo "TIMESTAMP2: $TIMESTAMP2"
+        echo "TIMESTAMP3: $TIMESTAMP3"
+
+        if [ "$TIMESTAMP1" != "$TIMESTAMP2" ]; then
+          echo "Timestamp1 and Timestamp2 are different"
+          exit 1
+        fi
+
+        if [ "$TIMESTAMP1" != "$TIMESTAMP3" ]; then
+          echo "Timestamp1 and Timestamp3 are different"
+          exit 1
+        fi
+
+        if [ "$TIMESTAMP2" != "$TIMESTAMP3" ]; then
+          echo "Timestamp2 and Timestamp3 are different"
+          exit 1
+        fi
+
+        echo "All timestamps are the same"
