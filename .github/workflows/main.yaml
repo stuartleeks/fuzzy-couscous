@@ -47,9 +47,6 @@ jobs:
         imageName: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
         cacheFrom: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
         refFilterForPush: refs/heads/main
-        env: |
-          GITHUB_STEP_SUMMARY
-          GITHUB_OUTPUT
         runCmd: |
           set -e
 
@@ -67,9 +64,6 @@ jobs:
         imageName: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
         cacheFrom: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
         refFilterForPush: refs/heads/main
-        env: |
-          GITHUB_STEP_SUMMARY
-          GITHUB_OUTPUT
         runCmd: |
           set -e
 
@@ -113,9 +107,6 @@ jobs:
         imageName: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
         cacheFrom: "ghcr.io/stuartleeks/fuzzy-couscous/dev-container"
         refFilterForPush: refs/heads/main
-        env: |
-          GITHUB_STEP_SUMMARY
-          GITHUB_OUTPUT
         runCmd: |
           set -e
 
