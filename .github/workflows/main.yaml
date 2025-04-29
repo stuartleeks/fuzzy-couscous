@@ -5,6 +5,11 @@ on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
+    inputs:
+      cliVersion:
+        description: 'CLI version'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -17,6 +22,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       name: checkout code
+
+    - name: Set CLI version
+      if: ${{ inputs.cliVersion != '' }}
+      run: |
+        # https://github.com/devcontainers/ci/issues/252
+        npm install --global @devcontainers/cli@${{ inputs.cliVersion }}
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2 
@@ -67,6 +78,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       name: checkout code
+
+    - name: Set CLI version
+      if: ${{ inputs.cliVersion != '' }}
+      run: |
+        # https://github.com/devcontainers/ci/issues/252
+        npm install --global @devcontainers/cli@${{ inputs.cliVersion }}
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2 
