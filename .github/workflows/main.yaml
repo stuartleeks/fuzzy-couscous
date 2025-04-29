@@ -49,6 +49,7 @@ jobs:
         refFilterForPush: refs/heads/main
         env: |
           GITHUB_STEP_SUMMARY
+          GITHUB_OUTPUT
         runCmd: |
           set -e
 
@@ -68,6 +69,7 @@ jobs:
         refFilterForPush: refs/heads/main
         env: |
           GITHUB_STEP_SUMMARY
+          GITHUB_OUTPUT
         runCmd: |
           set -e
 
@@ -113,6 +115,7 @@ jobs:
         refFilterForPush: refs/heads/main
         env: |
           GITHUB_STEP_SUMMARY
+          GITHUB_OUTPUT
         runCmd: |
           set -e
 
